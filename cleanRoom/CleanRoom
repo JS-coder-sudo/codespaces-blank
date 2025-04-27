@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room Item Decision Helper</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            color: #05445E;
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .options button {
+            background-color: #00b4d8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        .options button:hover {
+            background-color: #0077b6;
+        }
+        .result {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 40px;
+            color: #007f5f;
+        }
+        .progress-container {
+            width: 80%;
+            background-color: #d3f4f2;
+            border-radius: 20px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 20px;
+            width: 0%;
+            background-color: #00b4d8;
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div style="font-size: 60px; margin-bottom: 10px;">🏡</div>
+    <h1>Room Item Decision Helper</h1>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div id="quiz">
+        <div class="question" id="question">Let's get started! Is the item useful in your daily life? 🧰</div>
+        <div class="options" id="options">
+            <button onclick="nextQuestion('yes')">✅ Yes</button>
+            <button onclick="nextQuestion('no')">❌ No</button>
+        </div>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        let stage = 0;
+        let path = [];
+
+        const questions = [
+            { 
+                question: "Is the item useful in your daily life? 🧰",
+                options: ["✅ Yes", "❌ No"]
+            },
+            {
+                question: "Does it bring you happiness or positive memories? ❤️",
+                options: ["Yes!", "Not really"]
+            },
+            {
+                question: "Have you used it in the last 6 months? ⏳",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Would you buy it again today if you didn't own it? 🛒",
+                options: ["Absolutely", "Probably not"]
+            },
+            {
+                question: "Is it in good condition? ✨",
+                options: ["Perfect", "Damaged"]
+            },
+            {
+                question: "Does it have real monetary value? 💵",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Is it unique, rare, or hard to replace? 🌟",
+                options: ["Unique", "Common"]
+            },
+            {
+                question: "Is someone else likely to appreciate or need it more? 🎁",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Does it clutter your space without adding value? 📦",
+                options: ["Yes", "No"]
+            },
+            {
+                question: "Would letting it go improve your room's vibe? ✨",
+                options: ["Definitely", "Not really"]
+            }
+        ];
+
+        function nextQuestion(answer) {
+            path.push(answer);
+            stage++;
+            updateQuiz();
+        }
+
+        function updateQuiz() {
+            const questionDiv = document.getElementById('question');
+            const optionsDiv = document.getElementById('options');
+            const resultDiv = document.getElementById('result');
+            const progressBar = document.getElementById('progressBar');
+
+            progressBar.style.width = ((stage / questions.length) * 100) + "%";
+
+            if (stage < questions.length) {
+                questionDiv.textContent = questions[stage].question;
+                optionsDiv.innerHTML = "";
+                questions[stage].options.forEach(option => {
+                    optionsDiv.innerHTML += `<button onclick="nextQuestion('${option}')">${option}</button>`;
+                });
+            } else {
+                // Decision Logic
+                let keepPoints = 0;
+                let sellPoints = 0;
+                let givePoints = 0;
+                let throwPoints = 0;
+
+                path.forEach(answer => {
+                    if (answer.includes("Yes") || answer.includes("Absolutely") || answer.includes("Perfect") || answer.includes("Unique") || answer.includes("No")) {
+                        keepPoints++;
+                    }
+                    if (answer.includes("Damaged") || answer.includes("Not really") || answer.includes("Common") || answer.includes("No")) {
+                        throwPoints++;
+                    }
+                    if (answer.includes("Someone else") || answer.includes("🎁")) {
+                        givePoints++;
+                    }
+                    if (answer.includes("Monetary") || answer.includes("💵")) {
+                        sellPoints++;
+                    }
+                });
+
+                document.getElementById('quiz').style.display = 'none';
+                if (keepPoints >= 7) {
+                    resultDiv.innerHTML = "❤️ Keep it! It sparks joy and has value!";
+                } else if (sellPoints >= 3) {
+                    resultDiv.innerHTML = "💵 Sell it! Make some money for something you really love!";
+                } else if (givePoints >= 3) {
+                    resultDiv.innerHTML = "🎁 Give it away! Someone else will appreciate it.";
+                } else {
+                    resultDiv.innerHTML = "🗑️ Time to throw it away or recycle it!";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
