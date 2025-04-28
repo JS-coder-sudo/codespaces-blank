@@ -1,183 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Room Item Decision Helper</title>
-    <style>
-        body {
-            background: linear-gradient(135deg, #a8edea, #fed6e3);
-            font-family: 'Arial Rounded MT Bold', sans-serif;
-            color: #05445E;
-            text-align: center;
-            padding: 40px;
-        }
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-        .question {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .options button {
-            background-color: #00b4d8;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            margin: 10px;
-            border-radius: 15px;
-            font-size: 20px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: background-color 0.3s;
-        }
-        .options button:hover {
-            background-color: #0077b6;
-        }
-        .result {
-            font-size: 32px;
-            font-weight: bold;
-            margin-top: 40px;
-            color: #007f5f;
-        }
-        .progress-container {
-            width: 80%;
-            background-color: #d3f4f2;
-            border-radius: 20px;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 20px;
-            width: 0%;
-            background-color: #00b4d8;
-            transition: width 0.4s ease;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Lending Your Mess A Hand</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #17b8bf, #df37a8);
+      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+      color: #05445E;
+      text-align: center;
+      padding: 40px;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+      color: #1bdf94;
+    }
+    .question {
+      font-size: 26px;
+      margin-bottom: 20px;
+      background: #ffffffcc;
+      padding: 20px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+    }
+    .options button {
+      background-color: #5f8cff;
+      color: #ffffff;
+      border: none;
+      padding: 15px 30px;
+      margin: 10px;
+      border-radius: 25px;
+      font-size: 22px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    }
+    .options button:hover {
+      background-color: #4dd0e1;
+      transform: scale(1.05);
+    }
+    .progress-container {
+      width: 80%;
+      background-color: #d3f4f2;
+      border-radius: 20px;
+      margin: 20px auto;
+      overflow: hidden;
+      height: 20px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      transition: width 0.5s ease;
+      border-radius: 20px 0 0 20px;
+    }
+    .slider-container {
+      margin: 30px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      font-size: 26px;
+      flex-wrap: wrap;
+    }
+    input[type="range"] {
+      width: 200px;
+      accent-color: #4fc3f7;
+      cursor: pointer;
+    }
+    input[type="range"].small-slider {
+      height: 10px; /* half size */
+    }
+    .result {
+      font-size: 34px;
+      font-weight: bold;
+      margin-top: 40px;
+      color: #7b2cbf;
+      background: #fff0f5;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }
+    .back-button {
+      margin-top: 20px;
+      font-size: 24px;
+      background-color: #1bdf94;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    }
+    .back-button:hover {
+      background-color: #17b8bf;
+      transform: scale(1.05);
+    }
+    .restart-button {
+      margin-top: 20px;
+      font-size: 24px;
+      background-color: #5f8cff;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    }
+    .restart-button:hover {
+      background-color: #4dd0e1;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
+
 <body>
 
-    <div style="font-size: 60px; margin-bottom: 10px;">🏡</div>
-    <h1>Room Item Decision Helper</h1>
+  <div style="font-size: 60px; margin-bottom: 10px;">🏡</div>
+  <h1>Lending Your Mess A Hand</h1>
 
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
+  <div class="slider-container">
+    <span style="font-size: 30px;">🗑️</span>
+    <input type="range" id="thresholdSlider" min="1" max="10" value="5">
+    <span style="font-size: 30px;">❤️</span>
+  </div>
+  <div style="margin-bottom: 20px; font-size: 18px;">Set how many points to keep</div>
+
+  <div class="slider-container">
+    <span style="font-size: 28px;">🗑️</span>
+    <input type="range" id="tieBreakerSlider" min="0" max="1" value="1" class="small-slider">
+    <span style="font-size: 28px;">❤️</span>
+  </div>
+  <div style="margin-bottom: 20px; font-size: 16px;">Set what happens when you get 5 points</div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div id="quiz">
+    <div class="question" id="question">Let's get started! Is the item useful in your daily life? 🧰</div>
+    <div class="options" id="options">
+      <button onclick="nextQuestion('✅ Yes')">✅ Yes</button>
+      <button onclick="nextQuestion('❌ No')">❌ No</button>
     </div>
+  </div>
 
-    <div id="quiz">
-        <div class="question" id="question">Let's get started! Is the item useful in your daily life? 🧰</div>
-        <div class="options" id="options">
-            <button onclick="nextQuestion('yes')">✅ Yes</button>
-            <button onclick="nextQuestion('no')">❌ No</button>
-        </div>
-    </div>
+  <div class="result" id="result"></div>
 
-    <div class="result" id="result"></div>
+  <script>
+    let stage = 0;
+    let path = [];
+    let totalPoints = 0;
 
-    <script>
-        let stage = 0;
-        let path = [];
+    // Sounds
+    const yesSound = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_90cd96291e.mp3'); // Happy sound
+    const noSound = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_2ab64fd9ee.mp3');  // Boop sound
+    const sliderSound = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_c213b97fb8.mp3'); // slider move
 
-        const questions = [
-            { 
-                question: "Is the item useful in your daily life? 🧰",
-                options: ["✅ Yes", "❌ No"]
-            },
-            {
-                question: "Does it bring you happiness or positive memories? ❤️",
-                options: ["Yes!", "Not really"]
-            },
-            {
-                question: "Have you used it in the last 6 months? ⏳",
-                options: ["Yes", "No"]
-            },
-            {
-                question: "Would you buy it again today if you didn't own it? 🛒",
-                options: ["Absolutely", "Probably not"]
-            },
-            {
-                question: "Is it in good condition? ✨",
-                options: ["Perfect", "Damaged"]
-            },
-            {
-                question: "Does it have real monetary value? 💵",
-                options: ["Yes", "No"]
-            },
-            {
-                question: "Is it unique, rare, or hard to replace? 🌟",
-                options: ["Unique", "Common"]
-            },
-            {
-                question: "Is someone else likely to appreciate or need it more? 🎁",
-                options: ["Yes", "No"]
-            },
-            {
-                question: "Does it clutter your space without adding value? 📦",
-                options: ["Yes", "No"]
-            },
-            {
-                question: "Would letting it go improve your room's vibe? ✨",
-                options: ["Definitely", "Not really"]
-            }
-        ];
+    const questions = [
+      { 
+        question: "Is the item useful in your daily life? 🧰",
+        options: [
+          { text: "✅ Yes", points: 1 }, 
+          { text: "❌ No", points: 0 }
+        ]
+      },
+      {
+        question: "Does it bring you happiness or positive memories? ❤️",
+        options: [
+          { text: "Yes!", points: 1 }, 
+          { text: "Not really", points: 0 }
+        ]
+      },
+      {
+        question: "Have you used it in the last 6 months? ⏳",
+        options: [
+          { text: "Yes", points: 1 }, 
+          { text: "No", points: 0 }
+        ]
+      },
+      {
+        question: "Would you buy it again today if you didn't own it? 🛒",
+        options: [
+          { text: "Absolutely", points: 1 }, 
+          { text: "Probably not", points: 0 }
+        ]
+      },
+      {
+        question: "Is it in good condition? ✨",
+        options: [
+          { text: "Perfect", points: 1 }, 
+          { text: "Damaged", points: 0 }
+        ]
+      },
+      {
+        question: "Does it have real monetary value? 💵",
+        options: [
+          { text: "Yes", points: 1 }, 
+          { text: "No", points: 0 }
+        ]
+      },
+      {
+        question: "Is it unique, rare, or hard to replace? 🌟",
+        options: [
+          { text: "Unique", points: 1 }, 
+          { text: "Common", points: 0 }
+        ]
+      },
+      {
+        question: "Is someone else likely to appreciate or need it more? 🎁",
+        options: [
+          { text: "Yes", points: 0 }, 
+          { text: "No", points: 1 }
+        ]
+      },
+      {
+        question: "Does it clutter your space without adding value? 📦",
+        options: [
+          { text: "Yes", points: 0 }, 
+          { text: "No", points: 1 }
+        ]
+      },
+      {
+        question: "Would letting it go improve your room's vibe? ✨",
+        options: [
+          { text: "Definitely", points: 0 }, 
+          { text: "Not really", points: 1 }
+        ]
+      }
+    ];
 
-        function nextQuestion(answer) {
-            path.push(answer);
-            stage++;
-            updateQuiz();
+    function nextQuestion(answer) {
+      if (answer.includes('Yes') || answer.includes('✅')) {
+        yesSound.currentTime = 0;
+        yesSound.play();
+      } else {
+        noSound.currentTime = 0;
+        noSound.play();
+      }
+
+      const currentQuestion = questions[stage];
+      const selectedOption = currentQuestion.options.find(option => option.text === answer);
+      totalPoints += selectedOption.points;
+      path.push(selectedOption.points);
+
+      stage++;
+      updateQuiz();
+    }
+
+    function goBack() {
+      yesSound.currentTime = 0;
+      yesSound.play();
+      if (stage > 0) {
+        stage--;
+        totalPoints -= path.pop();
+        updateQuiz();
+      }
+    }
+
+    function updateQuiz() {
+      const questionDiv = document.getElementById('question');
+      const optionsDiv = document.getElementById('options');
+      const resultDiv = document.getElementById('result');
+      const progressBar = document.getElementById('progressBar');
+
+      progressBar.style.width = ((stage / questions.length) * 100) + "%";
+
+      if (stage < questions.length) {
+        questionDiv.textContent = questions[stage].question;
+        optionsDiv.innerHTML = "";
+        questions[stage].options.forEach(option => {
+          optionsDiv.innerHTML += `<button onclick="nextQuestion('${option.text}')">${option.text}</button>`;
+        });
+
+        if (stage > 0) {
+          optionsDiv.innerHTML += `<button class="back-button" onclick="goBack()">⬅️ Back</button>`;
+        }
+      } else {
+        const threshold = parseInt(document.getElementById('thresholdSlider').value);
+        const tieBreaker = parseInt(document.getElementById('tieBreakerSlider').value);
+
+        let decision = "";
+
+        if (totalPoints > threshold) {
+          decision = "Keep it! 🏡";
+        } else if (totalPoints < threshold) {
+          decision = "Let it go! 🗑️";
+        } else {
+          decision = tieBreaker === 1 ? "Keep it! 🏡" : "Let it go! 🗑️";
         }
 
-        function updateQuiz() {
-            const questionDiv = document.getElementById('question');
-            const optionsDiv = document.getElementById('options');
-            const resultDiv = document.getElementById('result');
-            const progressBar = document.getElementById('progressBar');
+        resultDiv.innerHTML = `
+          Result: ${decision}<br><br>Total Points: ${totalPoints}
+          <br><br>
+          <button class="restart-button" onclick="location.reload()">🔄 Restart</button>
+        `;
+        questionDiv.style.display = "none";
+        optionsDiv.style.display = "none";
+      }
+    }
 
-            progressBar.style.width = ((stage / questions.length) * 100) + "%";
-
-            if (stage < questions.length) {
-                questionDiv.textContent = questions[stage].question;
-                optionsDiv.innerHTML = "";
-                questions[stage].options.forEach(option => {
-                    optionsDiv.innerHTML += `<button onclick="nextQuestion('${option}')">${option}</button>`;
-                });
-            } else {
-                // Decision Logic
-                let keepPoints = 0;
-                let sellPoints = 0;
-                let givePoints = 0;
-                let throwPoints = 0;
-
-                path.forEach(answer => {
-                    if (answer.includes("Yes") || answer.includes("Absolutely") || answer.includes("Perfect") || answer.includes("Unique") || answer.includes("No")) {
-                        keepPoints++;
-                    }
-                    if (answer.includes("Damaged") || answer.includes("Not really") || answer.includes("Common") || answer.includes("No")) {
-                        throwPoints++;
-                    }
-                    if (answer.includes("Someone else") || answer.includes("🎁")) {
-                        givePoints++;
-                    }
-                    if (answer.includes("Monetary") || answer.includes("💵")) {
-                        sellPoints++;
-                    }
-                });
-
-                document.getElementById('quiz').style.display = 'none';
-                if (keepPoints >= 7) {
-                    resultDiv.innerHTML = "❤️ Keep it! It sparks joy and has value!";
-                } else if (sellPoints >= 3) {
-                    resultDiv.innerHTML = "💵 Sell it! Make some money for something you really love!";
-                } else if (givePoints >= 3) {
-                    resultDiv.innerHTML = "🎁 Give it away! Someone else will appreciate it.";
-                } else {
-                    resultDiv.innerHTML = "🗑️ Time to throw it away or recycle it!";
-                }
-            }
-        }
-    </script>
+    // Play sound when sliders move
+    document.getElementById('thresholdSlider').addEventListener('input', () => {
+      sliderSound.currentTime = 0;
+      sliderSound.play();
+    });
+    document.getElementById('tieBreakerSlider').addEventListener('input', () => {
+      sliderSound.currentTime = 0;
+      sliderSound.play();
+    });
+  </script>
 
 </body>
 </html>
